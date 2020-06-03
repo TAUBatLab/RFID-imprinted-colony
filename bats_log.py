@@ -40,7 +40,7 @@ class DATA:
         self.bats_activity.replace({'TAG': self.tags_dict['bat_name']}, inplace= True)
         self.bats_activity.rename(columns={"TAG": "bat"}, inplace=True)
         self.bats_activity.drop(columns=["A",'B','D','db','F','H','J'], inplace=True)
-        print (self.bats_activity)
+        # print (self.bats_activity)
         
 
     def export_csv(self):
@@ -54,7 +54,15 @@ class DATA:
         
     def remove_duplicates (self):
         """ removes duplicates reads in a minute"""
-        pass
+        self.bats_activity.index = self.bats_activity.index.strftime('%Y-%m-%d %H:%M')
+        self.bats_activity['time']= self.bats_activity.index
+        self.bats_activity.drop_duplicates(subset=['time', 'bat','ANTENNA'], keep="last", inplace=True)
+        self.bats_activity.reset_index(inplace = True)
+        self.bats_activity = self.bats_activity[['time', 'bat', 'ANTENNA']]
+       
+
+        print (self.bats_activity)
+
     
     def run (self):
         """ main"""
@@ -62,6 +70,7 @@ class DATA:
         self.read_tags_dict()
         self.time_index()
         self.find_bats()
+        self.remove_duplicates()
         print ("Working...")
         self.export_csv()
         print ('Done!')
@@ -76,3 +85,5 @@ if __name__ == "__main__":
     tags_file = 'mock_dict.csv'
     data = DATA(fname, tags_file)
     data.run()
+
+   
