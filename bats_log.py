@@ -39,7 +39,8 @@ class DATA:
         self.bats_activity = self.df.copy()
         self.bats_activity.replace({'TAG': self.tags_dict['bat_name']}, inplace= True)
         self.bats_activity.rename(columns={"TAG": "bat"}, inplace=True)
-        # print (self.bats_activity)
+        self.bats_activity.drop(columns=["A",'B','D','db','F','H','J'], inplace=True)
+        print (self.bats_activity)
         
 
     def export_csv(self):
