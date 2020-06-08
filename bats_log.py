@@ -9,6 +9,7 @@ class DATA:
         self.tags_file = tags_file
         self.tags_dict = None
         self.bats_activity = None
+        self.fdate = None
 
     def read_tags_dict(self):
         """ reads tags-bats csv file into tags_dict
@@ -46,10 +47,9 @@ class DATA:
     def export_csv(self):
         """ saves bats_activity into csv file
             input:  self.bats_activity
-            output: {date}.bats_activity.csv """
+            output: summery_{file_date}.csv """
 
-        self.bats_activity.to_csv(f"bats_activity_{pd.Timestamp.now().strftime('%Y-%m-%d')}.csv")
-        
+        self.bats_activity.to_csv(f"summery_{self.fdate}.csv")
 
         
     def remove_duplicates (self):
@@ -60,8 +60,11 @@ class DATA:
         self.bats_activity.reset_index(inplace = True)
         self.bats_activity = self.bats_activity[['time', 'bat', 'ANTENNA']]
        
-
         print (self.bats_activity)
+
+    def extract_date(self):
+        self.fdate = self.fname
+        self.fdate = self.fdate.split('_')[1].split('.')[0]
 
     
     def run (self):
@@ -72,8 +75,10 @@ class DATA:
         self.find_bats()
         self.remove_duplicates()
         print ("Working...")
+        self.extract_date()
         self.export_csv()
         print ('Done!')
+        
 
 
 
